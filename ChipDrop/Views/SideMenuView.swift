@@ -58,10 +58,7 @@ struct SideMenuView: View {
                         if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                         isShowing = false
                     }
-                    menuItem(icon: "globe", title: "Visit Website", color: Theme.textSecondary) {
-                        if let url = URL(string: "https://freechipswsop.com") { UIApplication.shared.open(url) }
-                        isShowing = false
-                    }
+
                 }
                 .padding(.top, 12)
 

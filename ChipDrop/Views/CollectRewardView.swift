@@ -165,7 +165,7 @@ struct CollectRewardView: View {
     }
 
     private func shareReward() {
-        let text = "🎰 I just collected \(chipLink.displayTitle) from ChipDrop! Get your free WSOP chips:\nhttps://freechipswsop.com"
+        let text = "🎰 I just collected \(chipLink.displayTitle) from ChipDrop! Download the app to collect your free chips daily."
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootVC = windowScene.windows.first?.rootViewController {

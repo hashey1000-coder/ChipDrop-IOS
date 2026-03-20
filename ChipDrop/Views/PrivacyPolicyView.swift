@@ -15,7 +15,7 @@ struct PrivacyPolicyView: View {
 
                         bodyText("Last updated: March 2026")
 
-                        bodyText("ChipDrop (\"the App\") is a free utility that aggregates publicly available WSOP bonus links from freechipswsop.com. This Privacy Policy describes how we handle your information.")
+                        bodyText("ChipDrop (\"the App\") is a free utility that aggregates publicly available daily reward links. This Privacy Policy describes how we handle your information.")
 
                         sectionTitle("Information We Collect")
 
@@ -39,7 +39,7 @@ struct PrivacyPolicyView: View {
 
                         sectionTitle("Third-Party Services")
 
-                        bodyText("The App fetches publicly available data from freechipswsop.com. When you tap \"Collect\" on a chip link, it opens the link via your device's default browser or the WSOP app. We have no control over third-party sites or apps.")
+                        bodyText("The App fetches publicly available reward link data. When you tap \"Collect\" on a link, it opens via your device's default browser or a third-party app. We have no control over third-party sites or apps.")
 
                         sectionTitle("Push Notifications")
 
@@ -57,11 +57,7 @@ struct PrivacyPolicyView: View {
 
                         sectionTitle("Contact")
 
-                        bodyText("If you have questions about this Privacy Policy, please visit:")
-
-                        Link("freechipswsop.com/contact", destination: URL(string: "https://freechipswsop.com/contact/")!)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(Theme.accent)
+                        bodyText("If you have questions about this Privacy Policy, please contact us at: admin@chipdrop.com")
 
                         sectionTitle("Disclaimer")
 

@@ -243,7 +243,7 @@ struct HomeView: View {
     }
 
     private func shareApp() {
-        let text = "🎰 Check out ChipDrop! Get free WSOP chips daily!\nhttps://freechipswsop.com"
+        let text = "🎰 Check out ChipDrop! Collect free chip rewards daily — download it now on the App Store."
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootVC = windowScene.windows.first?.rootViewController {
