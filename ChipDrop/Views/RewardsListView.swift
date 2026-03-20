@@ -240,37 +240,37 @@ struct RewardRowView: View {
     let onCollect: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            ZStack(alignment: .topLeading) {
-                Group {
-                    if link.rewardType == .chips {
-                        ChipIconView(size: 46, style: .dual)
-                    } else {
-                        BingoBallsView(size: 46)
+        Button(action: onCollect) {
+            HStack(spacing: 12) {
+                ZStack(alignment: .topLeading) {
+                    Group {
+                        if link.rewardType == .chips {
+                            ChipIconView(size: 46, style: .dual)
+                        } else {
+                            BingoBallsView(size: 46)
+                        }
+                    }
+
+                    if link.isNew {
+                        PillTag(text: "NEW", color: Theme.danger)
+                            .offset(x: -10, y: -6)
                     }
                 }
+                .frame(width: 56)
 
-                if link.isNew {
-                    PillTag(text: "NEW", color: Theme.danger)
-                        .offset(x: -10, y: -6)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(link.displayTitle)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+
+                    Text(link.timeAgo)
+                        .font(.system(size: 12))
+                        .foregroundColor(Theme.textSecondary)
                 }
-            }
-            .frame(width: 56)
 
-            VStack(alignment: .leading, spacing: 3) {
-                Text(link.displayTitle)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
+                Spacer()
 
-                Text(link.timeAgo)
-                    .font(.system(size: 12))
-                    .foregroundColor(Theme.textSecondary)
-            }
-
-            Spacer()
-
-            Button(action: onCollect) {
                 Text(link.isCollected ? "Done" : "Collect")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
@@ -283,14 +283,16 @@ struct RewardRowView: View {
                     )
                     .clipShape(Capsule())
             }
-            .disabled(link.isCollected)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Theme.surface)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 16))
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.surface)
-        )
+        .disabled(link.isCollected)
+        .buttonStyle(.plain)
     }
 }
 
