@@ -1,0 +1,400 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4CF3412D2F6D71070056D2E3 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = AA200003 /* FirebaseFirestore */; };
+		AA000001 /* ChipDropApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000010 /* ChipDropApp.swift */; };
+		AA000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000011 /* ContentView.swift */; };
+		AA000003 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000012 /* HomeView.swift */; };
+		AA000004 /* RewardsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000013 /* RewardsListView.swift */; };
+		AA000005 /* CollectRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000014 /* CollectRewardView.swift */; };
+		AA000006 /* ChipLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000015 /* ChipLink.swift */; };
+		AA000007 /* ChipService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000016 /* ChipService.swift */; };
+		AA000008 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000017 /* NotificationManager.swift */; };
+		AA000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000018 /* Assets.xcassets */; };
+		AA00000A /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000019 /* SideMenuView.swift */; };
+		AA00000B /* GradientStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001A /* GradientStyles.swift */; };
+		AA00000C /* ChipIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001B /* ChipIconView.swift */; };
+		AA00000D /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001C /* GuideView.swift */; };
+		AA00000E /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001D /* PrivacyPolicyView.swift */; };
+		AA00000F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA00001E /* GoogleService-Info.plist */; };
+		AA100001 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA200001 /* FirebaseCore */; };
+		AA100002 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AA200002 /* FirebaseMessaging */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000010 /* ChipDropApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipDropApp.swift; sourceTree = "<group>"; };
+		AA000011 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA000012 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		AA000013 /* RewardsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsListView.swift; sourceTree = "<group>"; };
+		AA000014 /* CollectRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectRewardView.swift; sourceTree = "<group>"; };
+		AA000015 /* ChipLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipLink.swift; sourceTree = "<group>"; };
+		AA000016 /* ChipService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipService.swift; sourceTree = "<group>"; };
+		AA000017 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		AA000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000019 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
+		AA00001A /* GradientStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientStyles.swift; sourceTree = "<group>"; };
+		AA00001B /* ChipIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipIconView.swift; sourceTree = "<group>"; };
+		AA00001C /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
+		AA00001D /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		AA00001E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AA000020 /* ChipDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChipDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000021 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CF3412D2F6D71070056D2E3 /* FirebaseFirestore in Frameworks */,
+				AA100001 /* FirebaseCore in Frameworks */,
+				AA100002 /* FirebaseMessaging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA000040 = {
+			isa = PBXGroup;
+			children = (
+				AA000041 /* ChipDrop */,
+				AA000042 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA000041 /* ChipDrop */ = {
+			isa = PBXGroup;
+			children = (
+				AA000010 /* ChipDropApp.swift */,
+				AA000011 /* ContentView.swift */,
+				AA000043 /* Views */,
+				AA000044 /* Models */,
+				AA000045 /* Services */,
+				AA000018 /* Assets.xcassets */,
+				AA000021 /* Info.plist */,
+				AA00001E /* GoogleService-Info.plist */,
+			);
+			path = ChipDrop;
+			sourceTree = "<group>";
+		};
+		AA000042 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000020 /* ChipDrop.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA000043 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA000012 /* HomeView.swift */,
+				AA000013 /* RewardsListView.swift */,
+				AA000014 /* CollectRewardView.swift */,
+				AA000019 /* SideMenuView.swift */,
+				AA00001A /* GradientStyles.swift */,
+				AA00001B /* ChipIconView.swift */,
+				AA00001C /* GuideView.swift */,
+				AA00001D /* PrivacyPolicyView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA000044 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA000015 /* ChipLink.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA000045 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000016 /* ChipService.swift */,
+				AA000017 /* NotificationManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000050 /* ChipDrop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000060 /* Build configuration list for PBXNativeTarget "ChipDrop" */;
+			buildPhases = (
+				AA000051 /* Sources */,
+				AA000030 /* Frameworks */,
+				AA000052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChipDrop;
+			packageProductDependencies = (
+				AA200001 /* FirebaseCore */,
+				AA200002 /* FirebaseMessaging */,
+				AA200003 /* FirebaseFirestore */,
+			);
+			productName = ChipDrop;
+			productReference = AA000020 /* ChipDrop.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000070 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AA000050 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA000071 /* Build configuration list for PBXProject "ChipDrop" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA000040;
+			packageReferences = (
+				AA300001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			productRefGroup = AA000042 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000050 /* ChipDrop */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000009 /* Assets.xcassets in Resources */,
+				AA00000F /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000051 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001 /* ChipDropApp.swift in Sources */,
+				AA000002 /* ContentView.swift in Sources */,
+				AA000003 /* HomeView.swift in Sources */,
+				AA000004 /* RewardsListView.swift in Sources */,
+				AA000005 /* CollectRewardView.swift in Sources */,
+				AA000006 /* ChipLink.swift in Sources */,
+				AA000007 /* ChipService.swift in Sources */,
+				AA000008 /* NotificationManager.swift in Sources */,
+				AA00000A /* SideMenuView.swift in Sources */,
+				AA00000B /* GradientStyles.swift in Sources */,
+				AA00000C /* ChipIconView.swift in Sources */,
+				AA00000D /* GuideView.swift in Sources */,
+				AA00000E /* PrivacyPolicyView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA000080 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA000081 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA000082 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ChipDrop/ChipDrop.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6BJC26ZX3C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChipDrop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChipDrop;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chipdrop.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000083 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ChipDrop/ChipDrop.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6BJC26ZX3C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChipDrop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChipDrop;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chipdrop.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000060 /* Build configuration list for PBXNativeTarget "ChipDrop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000082 /* Debug */,
+				AA000083 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000071 /* Build configuration list for PBXProject "ChipDrop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000080 /* Debug */,
+				AA000081 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA300001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA200001 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA300001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		AA200002 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA300001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		AA200003 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA300001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AA000070 /* Project object */;
+}

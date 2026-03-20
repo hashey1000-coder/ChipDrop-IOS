@@ -1,0 +1,12 @@
+// Firestore Security Rules for ChipDrop
+// Only Cloud Functions (admin SDK) can write — app clients read-only
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /chip_data/{document} {
+      allow read: if true;
+      allow write: if false; // writes only via Admin SDK in Cloud Functions
+    }
+  }
+}
