@@ -46,8 +46,9 @@ struct ChipLink: Identifiable, Codable, Equatable {
         }
     }
 
-    /// Time ago string — uses day-level precision because the website
-    /// only provides dates (no timestamps), so hour-level would be misleading.
+    /// Time ago string — shows hours for today, then days/weeks for older links.
+    /// Time ago string — the website only provides dates (no timestamps),
+    /// so we show "Today" / "Yesterday" for recent, then day/week counts for older.
     var timeAgo: String {
         let calendar = Calendar.current
 
