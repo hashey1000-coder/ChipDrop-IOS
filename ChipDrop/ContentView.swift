@@ -1,4 +1,5 @@
 import SwiftUI
+import AppTrackingTransparency
 
 /// Root navigation container
 struct ContentView: View {
@@ -17,6 +18,33 @@ struct ContentView: View {
             await chipService.fetchLinks()
             // Schedule daily reminder
             notificationManager.scheduleDailyReminder()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            // Request ATT permission for ad tracking — must be shown after app is active
+            requestTrackingPermission()
+        }
+    }
+
+    private func requestTrackingPermission() {
+        // Only prompt if status is not yet determined
+        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
+            // Small delay ensures the app is fully active before showing the prompt
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                ATTrackingManager.requestTrackingAuthorization { status in
+                    switch status {
+                    case .authorized:
+                        print("✅ Tracking authorized")
+                    case .denied:
+                        print("❌ Tracking denied")
+                    case .restricted:
+                        print("⚠️ Tracking restricted")
+                    case .notDetermined:
+                        print("❓ Tracking not determined")
+                    @unknown default:
+                        break
+                    }
+                }
+            }
         }
     }
 }
