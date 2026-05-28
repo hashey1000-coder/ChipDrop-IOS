@@ -13,6 +13,7 @@ const https = require("https");
 admin.initializeApp();
 
 const db = admin.firestore();
+const CACHE_WINDOW_DAYS = 7;
 
 // ─────────────────────────────────────────────
 // Scheduled function: check for new chips
@@ -29,24 +30,79 @@ exports.checkForNewChips = functions.pubsub
       return null;
     }
 
-    // Extract all wsopga.me chip links from the page
-    const urlRegex = /href="(https:\/\/www\.wsopga\.me\/[^"]+)"/gi;
-    const foundUrls = new Set();
-    let match;
-    while ((match = urlRegex.exec(html)) !== null) {
-      foundUrls.add(match[1]);
+    const parsedLinks = parseChipLinks(html);
+    if (parsedLinks.length === 0) {
+      console.error("❌ Parsed 0 chip links from page");
+      await db.collection("chip_data").doc("cached_links").set(
+        {
+          lastFetchStatus: "parse_failed",
+          lastFetchAttempt: admin.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+      return null;
     }
-    const uniqueUrls = Array.from(foundUrls);
+
+    const cachedLinks = filterLinksToRecentDays(parsedLinks, CACHE_WINDOW_DAYS);
+    console.log(`🗂 Keeping ${cachedLinks.length} links from the last ${CACHE_WINDOW_DAYS} days`);
+
+    const uniqueUrls = Array.from(new Set(parsedLinks.map((link) => link.url)));
     console.log(`🔍 Found ${uniqueUrls.length} total URLs on page`);
 
     // Load previously seen URLs from Firestore
     const docRef = db.collection("chip_data").doc("seen_urls");
+    const cacheRef = db.collection("chip_data").doc("cached_links");
     const doc = await docRef.get();
     const seenUrls = new Set(doc.exists ? (doc.data().urls || []) : []);
 
     // Find brand-new URLs not seen before
     const newUrls = uniqueUrls.filter((url) => !seenUrls.has(url));
     console.log(`🆕 New URLs detected: ${newUrls.length}`);
+
+    const batch = db.batch();
+
+    if (newUrls.length > 0) {
+      batch.set(
+        docRef,
+        {
+          urls: uniqueUrls,
+          lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+          lastNewCount: newUrls.length,
+          totalSeen: uniqueUrls.length,
+        },
+        { merge: true }
+      );
+    } else {
+      batch.set(
+        docRef,
+        { lastChecked: admin.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+      );
+    }
+
+    batch.set(
+      cacheRef,
+      {
+        links: cachedLinks.map((link) => ({
+          title: link.title,
+          url: link.url,
+          dateString: link.dateString,
+          datePosted: admin.firestore.Timestamp.fromDate(link.datePosted),
+          chipAmount: link.chipAmount,
+          rewardType: link.rewardType,
+          isNew: link.isNew,
+        })),
+        linkCount: cachedLinks.length,
+        cacheWindowDays: CACHE_WINDOW_DAYS,
+        lastFetchStatus: "success",
+        lastFetchAttempt: admin.firestore.FieldValue.serverTimestamp(),
+        lastFetchedAt: admin.firestore.FieldValue.serverTimestamp(),
+        ...(newUrls.length > 0
+          ? { contentUpdatedAt: admin.firestore.FieldValue.serverTimestamp() }
+          : {}),
+      },
+      { merge: true }
+    );
 
     if (newUrls.length > 0) {
       // Build FCM message — all devices subscribed to "new_chips" topic receive it
@@ -89,27 +145,150 @@ exports.checkForNewChips = functions.pubsub
       } catch (err) {
         console.error("❌ FCM send error:", err);
       }
-
-      // Persist updated full URL list to Firestore
-      await docRef.set({
-        urls: uniqueUrls,
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-        lastNewCount: newUrls.length,
-        totalSeen: uniqueUrls.length,
-      });
-
-      console.log(`📦 Firestore updated with ${uniqueUrls.length} URLs`);
-    } else {
-      // No new chips — just update the last-checked timestamp
-      await docRef.set(
-        { lastChecked: admin.firestore.FieldValue.serverTimestamp() },
-        { merge: true }
-      );
-      console.log("✓ No new chips. Timestamp updated.");
     }
+
+    await batch.commit();
+    console.log(`📦 Firestore cache updated with ${cachedLinks.length} links from the last ${CACHE_WINDOW_DAYS} days`);
 
     return null;
   });
+
+function filterLinksToRecentDays(links, days) {
+  const cutoff = new Date();
+  cutoff.setUTCHours(0, 0, 0, 0);
+  cutoff.setUTCDate(cutoff.getUTCDate() - (days - 1));
+
+  return links.filter((link) => link.datePosted >= cutoff);
+}
+
+function parseChipLinks(html) {
+  const headingRegex = /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi;
+  const headings = [];
+  let match;
+
+  while ((match = headingRegex.exec(html)) !== null) {
+    const rawHeading = stripHtml(match[2]);
+    const parsedDate = parseHeadingDate(rawHeading);
+    if (!parsedDate) continue;
+
+    headings.push({
+      startIndex: match.index,
+      endIndex: headingRegex.lastIndex,
+      dateString: rawHeading,
+      datePosted: parsedDate,
+    });
+  }
+
+  if (headings.length === 0) return [];
+
+  const links = [];
+  for (let i = 0; i < headings.length; i += 1) {
+    const current = headings[i];
+    const next = headings[i + 1];
+    const sectionHtml = html.slice(current.endIndex, next ? next.startIndex : html.length);
+    links.push(...extractLinksFromSection(sectionHtml, current.dateString, current.datePosted));
+  }
+
+  const unique = new Map();
+  for (const link of links) {
+    if (!unique.has(link.url)) {
+      unique.set(link.url, link);
+    }
+  }
+
+  return Array.from(unique.values()).sort((a, b) => b.datePosted - a.datePosted);
+}
+
+function extractLinksFromSection(sectionHtml, dateString, datePosted) {
+  const links = [];
+  const linkRegex = /<a[^>]*href="(https:\/\/www\.wsopga\.me\/[^\"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+  let match;
+
+  while ((match = linkRegex.exec(sectionHtml)) !== null) {
+    const url = match[1].trim();
+    const title = stripHtml(match[2]);
+    if (!title) continue;
+
+    links.push(buildChipLink(title, url, dateString, datePosted));
+  }
+
+  return links;
+}
+
+function buildChipLink(title, url, dateString, datePosted) {
+  const lower = title.toLowerCase();
+  let rewardType = "other";
+  let chipAmount = 0;
+
+  if (lower.includes("free chips")) {
+    rewardType = "chips";
+    const digits = title.replace(/\D/g, "");
+    chipAmount = parseInt(digits || "450000", 10);
+    if (chipAmount < 1000) chipAmount = 450000;
+  } else if (lower.includes("free spins")) {
+    rewardType = "freeSpins";
+  } else if (lower.includes("coffee mug")) {
+    rewardType = "coffeeMug";
+  } else if (lower.includes("ribbon")) {
+    rewardType = "ribbons";
+  }
+
+  return {
+    title,
+    url,
+    dateString,
+    datePosted,
+    chipAmount,
+    rewardType,
+    isNew: isToday(datePosted) || isYesterday(datePosted),
+  };
+}
+
+function parseHeadingDate(text) {
+  const cleaned = text
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const normalized = cleaned
+    .replace(/(\d+)(st|nd|rd|th)/gi, "$1")
+    .replace(/Feburary/gi, "February")
+    .trim();
+
+  if (!/^\d{1,2}\s+[A-Za-z]+\s+\d{4}$/.test(normalized) &&
+      !/^[A-Za-z]+\s+\d{1,2},?\s+\d{4}$/.test(normalized)) {
+    return null;
+  }
+
+  const parsed = new Date(`${normalized} UTC`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
+function stripHtml(value) {
+  return value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&#8211;/g, "-")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isToday(date) {
+  const now = new Date();
+  return date.getUTCFullYear() === now.getUTCFullYear() &&
+    date.getUTCMonth() === now.getUTCMonth() &&
+    date.getUTCDate() === now.getUTCDate();
+}
+
+function isYesterday(date) {
+  const yesterday = new Date();
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  return date.getUTCFullYear() === yesterday.getUTCFullYear() &&
+    date.getUTCMonth() === yesterday.getUTCMonth() &&
+    date.getUTCDate() === yesterday.getUTCDate();
+}
 
 // ─────────────────────────────────────────────
 // Helper: fetch a URL and return HTML string

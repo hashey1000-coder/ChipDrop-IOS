@@ -12,11 +12,14 @@ struct ContentView: View {
         }
         .tint(.white)
         .task {
-            // Request notification permissions on first launch
-            await notificationManager.requestPermission()
-            // Fetch chip links
+            chipService.startFirestoreListener()
+            // Fetch chip links immediately — do not block content loading on permission dialogs.
             await chipService.fetchLinks()
-            // Schedule daily reminder
+        }
+        .task {
+            // Request notification permissions separately so reviewers/users can still see content
+            // even if they ignore or deny the prompt.
+            await notificationManager.requestPermission()
             notificationManager.scheduleDailyReminder()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

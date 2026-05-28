@@ -15,6 +15,7 @@ class ChipService: ObservableObject {
     private let baseURL = "https://freechipswsop.com"
     private let cacheKey = "cached_chip_links"
     private let lastFetchKey = "last_fetch_date"
+    private let sharedCacheDocument = "cached_links"
 
     private var refreshTimer: AnyCancellable?
     private let autoRefreshInterval: TimeInterval = 600 // 10 minutes fallback
@@ -32,35 +33,27 @@ class ChipService: ObservableObject {
     init() {
         loadCachedLinks()
         startAutoRefresh()
-        startFirestoreListener()
     }
 
     // MARK: - Firestore Real-Time Listener
 
     /// Watches the Cloud Function's `chip_data/seen_urls` document.
-    /// When `lastUpdated` advances (new chips found), we re-scrape immediately.
+    /// When the shared cached links document changes, we update local state.
     func startFirestoreListener() {
+        guard firestoreListener == nil else { return }
+
         let db = Firestore.firestore()
-        firestoreListener = db.collection("chip_data").document("seen_urls")
+        firestoreListener = db.collection("chip_data").document(sharedCacheDocument)
             .addSnapshotListener { [weak self] snapshot, error in
-                guard let self = self,
-                      let data = snapshot?.data(),
-                      let serverTimestamp = data["lastUpdated"] as? Timestamp else { return }
-
-                let serverDate = serverTimestamp.dateValue()
-
-                // Compare against the last Firestore timestamp we saw,
-                // NOT against Date() — which was always newer and blocked refreshes.
-                if let lastSeen = self.lastSeenFirestoreTimestamp {
-                    if serverDate > lastSeen {
-                        print("🔔 Firestore: new chips detected — refreshing")
-                        self.lastSeenFirestoreTimestamp = serverDate
-                        Task { @MainActor in await self.fetchLinks() }
+                guard let self = self, let data = snapshot?.data() else {
+                    if let error {
+                        print("❌ Firestore cache listener error: \(error.localizedDescription)")
                     }
-                } else {
-                    // First launch — store the timestamp and fetch
-                    self.lastSeenFirestoreTimestamp = serverDate
-                    Task { @MainActor in await self.fetchLinks() }
+                    return
+                }
+
+                Task { @MainActor in
+                    self.applySharedCachePayload(data)
                 }
             }
     }
@@ -95,6 +88,11 @@ class ChipService: ObservableObject {
         isLoading = true
         errorMessage = nil
 
+        if await loadSharedCache() {
+            isLoading = false
+            return
+        }
+
         do {
             guard let url = URL(string: baseURL) else {
                 errorMessage = "Invalid URL"
@@ -124,6 +122,12 @@ class ChipService: ObservableObject {
             let previousURLs = Set(allLinks.map { $0.url })
             let parsedLinks = parseHTML(html)
 
+            guard !parsedLinks.isEmpty else {
+                errorMessage = "Couldn't load shared cache or parse live chip links. Please try again."
+                isLoading = false
+                return
+            }
+
             let newURLs = Set(parsedLinks.map { $0.url })
             let brandNewURLs = newURLs.subtracting(previousURLs)
 
@@ -141,6 +145,87 @@ class ChipService: ObservableObject {
             errorMessage = "Network error: \(error.localizedDescription)"
             isLoading = false
         }
+    }
+
+    private func loadSharedCache() async -> Bool {
+        await withCheckedContinuation { continuation in
+            Firestore.firestore().collection("chip_data").document(sharedCacheDocument)
+                .getDocument { [weak self] snapshot, error in
+                    guard let self = self,
+                          error == nil,
+                          let data = snapshot?.data() else {
+                        continuation.resume(returning: false)
+                        return
+                    }
+
+                    Task { @MainActor in
+                        let didApply = self.applySharedCachePayload(data)
+                        continuation.resume(returning: didApply)
+                    }
+                }
+        }
+    }
+
+    @MainActor
+    @discardableResult
+    private func applySharedCachePayload(_ data: [String: Any]) -> Bool {
+        guard let rawLinks = data["links"] as? [[String: Any]], !rawLinks.isEmpty else {
+            return false
+        }
+
+        let collectedURLs = Set(allLinks.filter { $0.isCollected }.map { $0.url })
+        let decodedLinks = rawLinks.compactMap(decodeSharedLink(from:))
+
+        guard !decodedLinks.isEmpty else { return false }
+
+        allLinks = decodedLinks.map { link in
+            var link = link
+            link.isCollected = collectedURLs.contains(link.url)
+            return link
+        }
+
+        if let fetched = data["lastFetchedAt"] as? Timestamp {
+            lastUpdated = fetched.dateValue()
+        } else if let updated = data["contentUpdatedAt"] as? Timestamp {
+            lastUpdated = updated.dateValue()
+        }
+
+        if let contentUpdated = data["contentUpdatedAt"] as? Timestamp {
+            let serverDate = contentUpdated.dateValue()
+            if let lastSeen = lastSeenFirestoreTimestamp {
+                if serverDate > lastSeen {
+                    print("🔔 Firestore cache updated — applying shared links")
+                }
+            }
+            lastSeenFirestoreTimestamp = serverDate
+        }
+
+        cacheLinks()
+        errorMessage = nil
+        return true
+    }
+
+    private func decodeSharedLink(from raw: [String: Any]) -> ChipLink? {
+        guard let title = raw["title"] as? String,
+              let url = raw["url"] as? String,
+              let dateString = raw["dateString"] as? String,
+              let dateTimestamp = raw["datePosted"] as? Timestamp,
+              let rewardTypeRaw = raw["rewardType"] as? String,
+              let rewardType = ChipLink.RewardType(rawValue: rewardTypeRaw) else {
+            return nil
+        }
+
+        return ChipLink(
+            id: UUID(),
+            title: title,
+            url: url,
+            dateString: dateString,
+            datePosted: dateTimestamp.dateValue(),
+            chipAmount: raw["chipAmount"] as? Int ?? 0,
+            rewardType: rewardType,
+            isNew: raw["isNew"] as? Bool ?? false,
+            isCollected: false
+        )
     }
 
     // MARK: - Parse

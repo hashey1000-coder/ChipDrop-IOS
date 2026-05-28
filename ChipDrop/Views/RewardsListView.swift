@@ -217,6 +217,14 @@ struct RewardsListView: View {
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
+            if let errorMessage = chipService.errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundColor(Theme.danger)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            }
+
             Button {
                 Task { await chipService.fetchLinks() }
             } label: {
